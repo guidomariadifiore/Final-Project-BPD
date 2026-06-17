@@ -8,8 +8,6 @@ public class ZoneDto {
     private String city;
     private String name;
     private double price;
-    private String format;
-
     public String getId() {
         return id;
     }
@@ -40,13 +38,5 @@ public class ZoneDto {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
     }
 }

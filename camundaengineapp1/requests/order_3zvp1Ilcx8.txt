@@ -1,0 +1,28 @@
+--- Confirmed Billposting Order ---
+Request ID: 3zvp1Ilcx8
+Invoice Number: 9115585578
+Amount Due: 29,80 €
+
+===================================
+USER INFORMATION
+===================================
+Username: sarabianchi
+Name: Sara Bianchi
+Tax Code: BNCSRA90A41A994F
+Email: sarabianchi@email.it
+Phone: +39 06 000 555
+Address: Corso Francia 68, 4.200 Roma
+
+===================================
+REQUEST INFORMATION
+===================================
+Poster Format: 30x40
+City Budgets:
+  - L'Aquila: 30 €
+
+===================================
+SELECTED ZONES
+===================================
+  - [6] Flaminio (L'Aquila) -> 19,9 €
+  - [4] Pettino (L'Aquila) -> 9,9 €
+-----------------------------------
