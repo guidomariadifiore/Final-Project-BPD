@@ -31,8 +31,13 @@ public class ZoneSelectionDelegate implements JavaDelegate {
         String cityBudgetsJson = (String) execution.getVariable("cityBudgets");
         List<CityBudgetDto> cityBudgets = objectMapper.readValue(cityBudgetsJson, new TypeReference<List<CityBudgetDto>>() {});
 
+        String strategy = (String) execution.getVariable("strategy");
+        if (strategy == null) {
+            strategy = "greedy";
+        }
+
         // Use service to perform Greedy Algorithm
-        List<ZoneDto> selectedZones = zoneSelectionService.selectZones(posterFormat, cityBudgets);
+        List<ZoneDto> selectedZones = zoneSelectionService.selectZones(posterFormat, cityBudgets, strategy);
         
         double totalPrice = selectedZones.stream().mapToDouble(ZoneDto::getPrice).sum();
 

@@ -6,6 +6,7 @@ public class AvailabilityRequestDto {
     private String username;
     private String posterFormat;
     private List<CityBudgetDto> cityBudgets;
+    private String strategy;
 
     public String getUsername() {
         return username;
@@ -29,5 +30,13 @@ public class AvailabilityRequestDto {
 
     public void setCityBudgets(List<CityBudgetDto> cityBudgets) {
         this.cityBudgets = cityBudgets;
+    }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
+    public void setStrategy(String strategy) {
+        this.strategy = strategy;
     }
 }

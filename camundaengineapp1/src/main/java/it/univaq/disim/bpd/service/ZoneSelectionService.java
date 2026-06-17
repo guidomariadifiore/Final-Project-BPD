@@ -22,7 +22,7 @@ public class ZoneSelectionService {
         this.restTemplate = new RestTemplate();
     }
 
-    public List<ZoneDto> selectZones(String posterFormat, List<CityBudgetDto> cityBudgets) {
+    public List<ZoneDto> selectZones(String posterFormat, List<CityBudgetDto> cityBudgets, String strategy) {
         String url = "http://localhost:9090/zones/" + posterFormat;
         
         // Fetch zones
@@ -47,8 +47,13 @@ public class ZoneSelectionService {
             // Filter zones by city
             List<ZoneDto> cityZones = allZones.stream()
                     .filter(z -> z.getCity().equalsIgnoreCase(city))
-                    .sorted(Comparator.comparing(ZoneDto::getPrice).reversed()) // Greedy: Most expensive first
                     .collect(Collectors.toList());
+                    
+            if ("cheapest".equalsIgnoreCase(strategy)) {
+                cityZones.sort(Comparator.comparing(ZoneDto::getPrice)); // Cheapest first
+            } else {
+                cityZones.sort(Comparator.comparing(ZoneDto::getPrice).reversed()); // Greedy: Most expensive first
+            }
 
             double currentTotal = 0.0;
 

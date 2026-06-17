@@ -37,6 +37,14 @@ public class BillpostingController {
             throw new BusinessException("At least one city with a budget must be provided", HttpStatus.BAD_REQUEST);
         }
 
+        String strategy = requestDto.getStrategy();
+        if (strategy == null || strategy.isEmpty()) {
+            strategy = "greedy";
+        }
+        if (!strategy.equalsIgnoreCase("greedy") && !strategy.equalsIgnoreCase("cheapest")) {
+            throw new BusinessException("Strategy must be either 'greedy' or 'cheapest'", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             String cityBudgetsJson;
@@ -52,6 +60,7 @@ public class BillpostingController {
             Map<String, Object> variables = new HashMap<>();
             variables.put("username", createVariable(requestDto.getUsername(), "String"));
             variables.put("posterFormat", createVariable(requestDto.getPosterFormat(), "String"));
+            variables.put("strategy", createVariable(strategy.toLowerCase(), "String"));
             // We pass the cityBudgets as JSON string to easily parse it in the delegate
             variables.put("cityBudgets", createVariable(cityBudgetsJson, "String"));
             
