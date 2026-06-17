@@ -1,0 +1,9 @@
+--- Confirmed Billposting Order ---
+Request ID: Uk14o19Ie5
+Username: mariorossi
+Invoice Number: 0995389024
+Amount Due: 192.3
+
+Selected Zones:
+[{"id":"5","city":"Rome","name":"Center","price":89.9,"format":null},{"id":"7","city":"Rome","name":"EUR","price":38.0,"format":null},{"id":"9","city":"Rome","name":"Trastevere","price":29.9,"format":null},{"id":"8","city":"Rome","name":"Parioli","price":18.5,"format":null},{"id":"10","city":"Rome","name":"Testaccio","price":16.0,"format":null}]
+-----------------------------------

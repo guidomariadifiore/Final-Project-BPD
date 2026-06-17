@@ -1,0 +1,12 @@
+it\univaq\disim\bpd\dto\CityBudgetDto.class
+it\univaq\disim\bpd\example\delegates\MyDelegate.class
+it\univaq\disim\bpd\service\FileService.class
+it\univaq\disim\bpd\delegate\WriteOrderToFileDelegate.class
+it\univaq\disim\bpd\delegate\ZoneSelectionDelegate$1.class
+it\univaq\disim\bpd\example\services\MyService.class
+it\univaq\disim\bpd\dto\ZoneDto.class
+it\univaq\disim\bpd\delegate\ZoneSelectionDelegate.class
+it\univaq\disim\example\data\MyData.class
+it\univaq\disim\bpd\service\ZoneSelectionService.class
+it\univaq\disim\bpd\Application.class
+it\univaq\disim\bpd\service\ZoneSelectionService$1.class

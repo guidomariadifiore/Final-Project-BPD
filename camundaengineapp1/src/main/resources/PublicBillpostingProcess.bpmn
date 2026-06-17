@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Camunda Modeler"
+                  exporterVersion="5.0.0">
+  <bpmn:process id="PublicBillpostingProcess" name="Public Billposting Process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start Process">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- GET USER DATA -->
+    <bpmn:serviceTask id="Task_GetUserData" name="Get User Data">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">
+              <camunda:script scriptFormat="javascript">"http://localhost:9080/user/" + username;</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:outputParameter name="user">
+              <camunda:script scriptFormat="javascript">S(response);</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <!-- ZONE SELECTION (DELEGATE) -->
+    <bpmn:serviceTask id="Task_ZoneSelection" name="Zone Selection" camunda:delegateExpression="${zoneSelectionDelegate}">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <!-- CHECK AVAILABILITY (SOAP) -->
+    <bpmn:serviceTask id="Task_CheckAvailability" name="Check Availability">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:connectorId>soap-http-connector</camunda:connectorId>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8888/postingservice</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="freemarker" resource="templates/checkAvailabilityRequest.ftl" />
+            </camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">text/xml;charset=UTF-8</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="requestId">
+              <camunda:script scriptFormat="javascript">S(response).xPath("//*[local-name()='requestId']").element().textContent();</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <!-- WAIT FOR DECISION -->
+    <bpmn:intermediateCatchEvent id="Event_WaitForDecision" name="Wait for Decision">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_Decision" />
+    </bpmn:intermediateCatchEvent>
+
+    <!-- EXCLUSIVE GATEWAY -->
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Decision?">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_Confirm</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Cancel</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- CONFIRM BRANCH -->
+    <bpmn:serviceTask id="Task_ConfirmRequest" name="Confirm Request">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:connectorId>soap-http-connector</camunda:connectorId>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8888/postingservice</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="freemarker" resource="templates/confirmRequest.ftl" />
+            </camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">text/xml;charset=UTF-8</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="accountHolder">
+              <camunda:script scriptFormat="javascript">S(response).xPath("//*[local-name()='accountHolder']").element().textContent();</camunda:script>
+            </camunda:outputParameter>
+            <camunda:outputParameter name="invoiceNumber">
+              <camunda:script scriptFormat="javascript">S(response).xPath("//*[local-name()='invoiceNumber']").element().textContent();</camunda:script>
+            </camunda:outputParameter>
+            <camunda:outputParameter name="amountDue">
+              <camunda:script scriptFormat="javascript">S(response).xPath("//*[local-name()='amountDue']").element().textContent();</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Confirm</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_WriteToFile" name="Write Order to File" camunda:delegateExpression="${writeOrderToFileDelegate}">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="EndEvent_Confirmed" name="Confirmed">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- CANCEL BRANCH -->
+    <bpmn:serviceTask id="Task_CancelRequest" name="Cancel Request">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:connectorId>soap-http-connector</camunda:connectorId>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8888/postingservice</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="freemarker" resource="templates/cancelRequest.ftl" />
+            </camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">text/xml;charset=UTF-8</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Cancel</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:scriptTask id="Task_PrintCancel" name="Print Cancellation" scriptFormat="javascript">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+      <bpmn:script>
+        print("--- ORDER CANCELLED ---");
+        print("Request ID: " + execution.getVariable("requestId"));
+      </bpmn:script>
+    </bpmn:scriptTask>
+
+    <bpmn:endEvent id="EndEvent_Cancelled" name="Cancelled">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- SEQUENCE FLOWS -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_GetUserData" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_GetUserData" targetRef="Task_ZoneSelection" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ZoneSelection" targetRef="Task_CheckAvailability" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_CheckAvailability" targetRef="Event_WaitForDecision" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Event_WaitForDecision" targetRef="Gateway_Decision" />
+    
+    <bpmn:sequenceFlow id="Flow_Confirm" name="Confirm" sourceRef="Gateway_Decision" targetRef="Task_ConfirmRequest">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision == 'confirm'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Cancel" name="Cancel" sourceRef="Gateway_Decision" targetRef="Task_CancelRequest">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision == 'cancel'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ConfirmRequest" targetRef="Task_WriteToFile" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_WriteToFile" targetRef="EndEvent_Confirmed" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_CancelRequest" targetRef="Task_PrintCancel" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_PrintCancel" targetRef="EndEvent_Cancelled" />
+
+  </bpmn:process>
+  <bpmn:message id="Message_Decision" name="decisionMessage" />
+</bpmn:definitions>
