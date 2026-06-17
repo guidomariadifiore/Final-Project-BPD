@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class FileService {
 
-    private static final String DIRECTORY_PATH = "requests/";
+    private static final String DIRECTORY_PATH = "../Confirmed_orders/";
 
     public void writeConfirmedRequestToFile(String requestId, Map<String, Object> dataModel) throws IOException {
         Files.createDirectories(Paths.get(DIRECTORY_PATH));
