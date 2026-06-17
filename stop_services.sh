@@ -18,7 +18,7 @@ kill_pid() {
 kill_pid "Final-project-services/user-service.pid"
 kill_pid "Final-project-services/zones-service.pid"
 kill_pid "Final-project-services/posting-service.pid"
-kill_pid "camundaengineapp1/camunda-engine.pid"
+kill_pid "Camunda_engine/camunda-engine.pid"
 kill_pid "billpostingapi/billposting-api.pid"
 
 # Force cleanup any lingering processes just in case the PID tracking missed a child Java process
@@ -26,7 +26,7 @@ echo "Cleaning up any dangling service processes..."
 pkill -f "user-service.jar"
 pkill -f "zones-service.jar"
 pkill -f "posting-service.jar"
-pkill -f "camundaengineapp1"
+pkill -f "Camunda_engine"
 pkill -f "billpostingapi"
 
 echo "All services successfully stopped!"

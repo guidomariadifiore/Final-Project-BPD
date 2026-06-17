@@ -23,7 +23,7 @@ echo $! > posting-service.pid
 cd ..
 
 echo "[4/5] Starting Camunda Engine (Spring Boot)..."
-cd camundaengineapp1
+cd Camunda_engine
 nohup mvn spring-boot:run > camunda-engine.log 2>&1 &
 echo $! > camunda-engine.pid
 cd ..

@@ -2,9 +2,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.univaq.disim.bpd</groupId>
-  <artifactId>camundaengineapp1</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>camundaengineapp1</name>
+  <artifactId>Camunda_engine</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Camunda_engine</name>
+  <description>Spring Boot Application with Camunda embedded</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
