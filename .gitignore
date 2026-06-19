@@ -7,8 +7,24 @@ target/
 *.tar.gz
 *.rar
 
-# Spring Boot
+# Java Compiled files
+*.class
+**/*.class
+
+# Maven Compiler Files
+*.lst
+
+# Process IDs
+*.pid
+**/*.pid
+
+# Plain Text Files / Orders
+*.txt
+**/*.txt
+
+# Spring Boot & General Logs
 *.log
+/**/*.log
 logs/
 
 # IDE Files
@@ -30,5 +46,3 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-
