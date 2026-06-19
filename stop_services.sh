@@ -1,8 +1,6 @@
 #!/bin/bash
 
-echo "========================================="
 echo "Stopping Final Project BPD Services..."
-echo "========================================="
 
 kill_pid() {
     if [ -f "$1" ]; then

@@ -2,6 +2,7 @@ package it.univaq.disim.bpd.billpostingapi.controller;
 
 import it.univaq.disim.bpd.billpostingapi.dto.AvailabilityRequestDto;
 import it.univaq.disim.bpd.billpostingapi.dto.AvailabilityResponseDto;
+import it.univaq.disim.bpd.billpostingapi.dto.CityBudgetDto;
 import it.univaq.disim.bpd.billpostingapi.dto.DecisionRequestDto;
 import it.univaq.disim.bpd.billpostingapi.dto.DecisionResponseDto;
 import it.univaq.disim.bpd.billpostingapi.exception.BusinessException;
@@ -24,6 +25,9 @@ public class BillpostingController {
     @Value("${camunda.rest.url:http://localhost:8080/engine-rest}")
     private String camundaRestUrl;
 
+    @Value("${user.service.url:http://localhost:9080/user/}")
+    private String userServiceUrl;
+
     public BillpostingController() {
         this.restTemplate = new RestTemplate();
     }
@@ -33,8 +37,19 @@ public class BillpostingController {
         if (requestDto.getUsername() == null || requestDto.getUsername().isEmpty()) {
             throw new BusinessException("Username cannot be empty", HttpStatus.BAD_REQUEST);
         }
+        if (requestDto.getPosterFormat() == null || requestDto.getPosterFormat().trim().isEmpty()) {
+            throw new BusinessException("Poster format cannot be empty", HttpStatus.BAD_REQUEST);
+        }
         if (requestDto.getCityBudgets() == null || requestDto.getCityBudgets().isEmpty()) {
             throw new BusinessException("At least one city with a budget must be provided", HttpStatus.BAD_REQUEST);
+        }
+        for (CityBudgetDto cityBudget : requestDto.getCityBudgets()) {
+            if (cityBudget.getCity() == null || cityBudget.getCity().trim().isEmpty()) {
+                throw new BusinessException("City name cannot be empty in budget definitions", HttpStatus.BAD_REQUEST);
+            }
+            if (cityBudget.getMaxBudget() < 0) {
+                throw new BusinessException("City max budget cannot be negative", HttpStatus.BAD_REQUEST);
+            }
         }
 
         String strategy = requestDto.getStrategy();
@@ -43,6 +58,18 @@ public class BillpostingController {
         }
         if (!strategy.equalsIgnoreCase("greedy") && !strategy.equalsIgnoreCase("cheapest")) {
             throw new BusinessException("Strategy must be either 'greedy' or 'cheapest'", HttpStatus.BAD_REQUEST);
+        }
+
+        // Validate user existence
+        try {
+            restTemplate.getForEntity(userServiceUrl + requestDto.getUsername(), String.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new BusinessException("User not found: " + requestDto.getUsername(), HttpStatus.NOT_FOUND);
+            }
+            throw new BusinessException("Error validating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new BusinessException("Error validating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {

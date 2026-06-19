@@ -1,7 +1,5 @@
 @echo off
-echo =========================================
 echo Stopping Final Project BPD Services...
-echo =========================================
 
 :: We use /T to kill the child java.exe/mvn.cmd processes attached to these windows
 taskkill /F /T /FI "WINDOWTITLE eq BPD-UserService*" >nul 2>&1

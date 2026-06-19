@@ -1,34 +1,32 @@
 #!/bin/bash
 
-echo "========================================="
 echo "Starting Final Project BPD Services..."
-echo "========================================="
 
-echo "[1/5] Starting User Service (Legacy)..."
+echo "[1/5] Starting User Service..."
 cd Final-project-services
 nohup java -jar user-service.jar > user-service.log 2>&1 &
 echo $! > user-service.pid
 cd ..
 
-echo "[2/5] Starting Zones Service (Legacy)..."
+echo "[2/5] Starting Zones Service..."
 cd Final-project-services
 nohup java -jar zones-service.jar > zones-service.log 2>&1 &
 echo $! > zones-service.pid
 cd ..
 
-echo "[3/5] Starting Posting Service (Legacy)..."
+echo "[3/5] Starting Posting Service..."
 cd Final-project-services
 nohup java -jar posting-service.jar > posting-service.log 2>&1 &
 echo $! > posting-service.pid
 cd ..
 
-echo "[4/5] Starting Camunda Engine (Spring Boot)..."
+echo "[4/5] Starting Camunda Engine..."
 cd Camunda_engine
 nohup mvn spring-boot:run > camunda-engine.log 2>&1 &
 echo $! > camunda-engine.pid
 cd ..
 
-echo "[5/5] Starting Billposting API (Spring Boot)..."
+echo "[5/5] Starting Billposting API..."
 cd billpostingapi
 nohup mvn spring-boot:run > billposting-api.log 2>&1 &
 echo $! > billposting-api.pid
