@@ -60,6 +60,7 @@ public class BillpostingController {
             throw new BusinessException("Strategy must be either 'greedy' or 'cheapest'", HttpStatus.BAD_REQUEST);
         }
 
+        // Validate user existence
         try {
             org.springframework.http.ResponseEntity<String> userResponse = restTemplate.getForEntity(userServiceUrl + requestDto.getUsername(), String.class);
             if (userResponse.getBody() == null || userResponse.getBody().trim().isEmpty()) {
