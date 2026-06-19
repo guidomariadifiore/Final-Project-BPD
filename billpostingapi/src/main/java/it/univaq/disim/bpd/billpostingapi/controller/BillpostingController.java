@@ -62,12 +62,17 @@ public class BillpostingController {
 
         // Validate user existence
         try {
-            restTemplate.getForEntity(userServiceUrl + requestDto.getUsername(), String.class);
+            org.springframework.http.ResponseEntity<String> userResponse = restTemplate.getForEntity(userServiceUrl + requestDto.getUsername(), String.class);
+            if (userResponse.getBody() == null || userResponse.getBody().trim().isEmpty()) {
+                throw new BusinessException("User not found: " + requestDto.getUsername(), HttpStatus.NOT_FOUND);
+            }
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new BusinessException("User not found: " + requestDto.getUsername(), HttpStatus.NOT_FOUND);
             }
             throw new BusinessException("Error validating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             throw new BusinessException("Error validating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
