@@ -11,6 +11,9 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,11 +81,11 @@ public class BillpostingController {
         }
 
         try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper();
             String cityBudgetsJson;
             try {
                 cityBudgetsJson = mapper.writeValueAsString(requestDto.getCityBudgets());
-            } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            } catch (JsonProcessingException e) {
                 throw new BusinessException("Failed to serialize cityBudgets", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
@@ -131,12 +134,12 @@ public class BillpostingController {
                 Object selectedZonesObj = zonesVar.get("value");
                 if (selectedZonesObj instanceof String) {
                     try {
-                        responseDto.setSelectedZones(mapper.readValue((String) selectedZonesObj, new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {}));
-                    } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+                        responseDto.setSelectedZones(mapper.readValue((String) selectedZonesObj, new TypeReference<List<Map<String, Object>>>() {}));
+                    } catch (JsonProcessingException e) {
                         throw new BusinessException("Failed to parse selectedZones JSON", HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                 } else {
-                    responseDto.setSelectedZones(mapper.convertValue(selectedZonesObj, new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {}));
+                    responseDto.setSelectedZones(mapper.convertValue(selectedZonesObj, new TypeReference<List<Map<String, Object>>>() {}));
                 }
             }
 

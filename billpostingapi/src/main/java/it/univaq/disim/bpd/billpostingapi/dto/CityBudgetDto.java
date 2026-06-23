@@ -1,6 +1,7 @@
 package it.univaq.disim.bpd.billpostingapi.dto;
 
 public class CityBudgetDto {
+    
     private String city;
     private double maxBudget;
 

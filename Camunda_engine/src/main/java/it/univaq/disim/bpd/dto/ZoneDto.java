@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZoneDto {
+    
     private String id;
     private String city;
     private String name;
     private double price;
+
     public String getId() {
         return id;
     }

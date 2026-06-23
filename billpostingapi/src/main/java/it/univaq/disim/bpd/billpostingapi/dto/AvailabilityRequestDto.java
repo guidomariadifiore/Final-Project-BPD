@@ -3,6 +3,7 @@ package it.univaq.disim.bpd.billpostingapi.dto;
 import java.util.List;
 
 public class AvailabilityRequestDto {
+    
     private String username;
     private String posterFormat;
     private List<CityBudgetDto> cityBudgets;

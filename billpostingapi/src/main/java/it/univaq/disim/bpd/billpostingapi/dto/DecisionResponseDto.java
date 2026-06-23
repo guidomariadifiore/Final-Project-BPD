@@ -1,6 +1,7 @@
 package it.univaq.disim.bpd.billpostingapi.dto;
 
 public class DecisionResponseDto {
+    
     private String accountHolder;
     private String invoiceNumber;
     private double amountDue;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AvailabilityResponseDto {
+    
     private String requestId;
     private double totalPrice;
     private List<Map<String, Object>> selectedZones;

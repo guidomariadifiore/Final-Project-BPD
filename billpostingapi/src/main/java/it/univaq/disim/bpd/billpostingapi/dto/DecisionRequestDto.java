@@ -1,6 +1,7 @@
 package it.univaq.disim.bpd.billpostingapi.dto;
 
 public class DecisionRequestDto {
+    
     private String requestId;
     private String decision; // "confirm" or "cancel"
 
