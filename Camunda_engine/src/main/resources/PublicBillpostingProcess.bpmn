@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.48.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0">
   <bpmn:process id="PublicBillpostingProcess" name="Public Billposting Process" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Start Process">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
@@ -118,10 +118,8 @@
     <bpmn:scriptTask id="Task_PrintCancel" name="Print Cancellation" scriptFormat="javascript">
       <bpmn:incoming>Flow_8</bpmn:incoming>
       <bpmn:outgoing>Flow_9</bpmn:outgoing>
-      <bpmn:script>
-        print("--- ORDER CANCELLED ---");
-        print("Request ID: " + execution.getVariable("requestId"));
-      </bpmn:script>
+      <bpmn:script>print("ORDER CANCELLED");
+print("Request ID: " + execution.getVariable("requestId"));</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:endEvent id="EndEvent_Cancelled" name="Cancelled">
       <bpmn:incoming>Flow_9</bpmn:incoming>
@@ -151,12 +149,6 @@
           <dc:Bounds x="134" y="143" width="67" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_CancelRequest_di" bpmnElement="Task_CancelRequest">
-        <dc:Bounds x="950" y="200" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_PrintCancel_di" bpmnElement="Task_PrintCancel">
-        <dc:Bounds x="1100" y="200" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_GetUserData_di" bpmnElement="Task_GetUserData">
         <dc:Bounds x="250" y="75" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -166,12 +158,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_CheckAvailability_di" bpmnElement="Task_CheckAvailability">
         <dc:Bounds x="550" y="75" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_Cancelled_di" bpmnElement="EndEvent_Cancelled">
-        <dc:Bounds x="1262" y="223" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1255" y="267" width="49" height="14" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_WaitForDecision_di" bpmnElement="Event_WaitForDecision">
         <dc:Bounds x="722" y="98" width="36" height="36" />
@@ -195,6 +181,18 @@
         <dc:Bounds x="1262" y="97" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1254" y="143" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CancelRequest_di" bpmnElement="Task_CancelRequest">
+        <dc:Bounds x="950" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrintCancel_di" bpmnElement="Task_PrintCancel">
+        <dc:Bounds x="1100" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Cancelled_di" bpmnElement="EndEvent_Cancelled">
+        <dc:Bounds x="1262" y="223" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1255" y="267" width="49" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
@@ -232,14 +230,6 @@
           <dc:Bounds x="892" y="213" width="35" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
-        <di:waypoint x="1050" y="240" />
-        <di:waypoint x="1100" y="240" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
-        <di:waypoint x="1200" y="240" />
-        <di:waypoint x="1262" y="240" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
         <di:waypoint x="1050" y="114" />
         <di:waypoint x="1100" y="114" />
@@ -247,6 +237,14 @@
       <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
         <di:waypoint x="1200" y="114" />
         <di:waypoint x="1262" y="114" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1050" y="240" />
+        <di:waypoint x="1100" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1200" y="240" />
+        <di:waypoint x="1262" y="240" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
